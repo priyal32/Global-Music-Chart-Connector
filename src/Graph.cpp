@@ -1,6 +1,18 @@
 #include "Graph.h"
 
-Graph::Graph(map<string, HT> &table)
+Graph::Graph(map<string, unordered_set<string>>& stlTable)
+{
+    //add all countries to graph so we don't have to check it later
+    for (auto it = stlTable.begin(); it != stlTable.end(); it++)
+    {
+        vector<pair<string, int>> vec;
+        string country = it->first;
+        graph[country] = vec;
+    }
+    AddEdges(stlTable);
+}
+
+Graph::Graph(map<string, HT>& table)
 {
     //add all countries to graph so we don't have to check it later
     for (auto it = table.begin(); it != table.end(); it++)
@@ -12,7 +24,45 @@ Graph::Graph(map<string, HT> &table)
     AddEdges(table);
 }
 
-void Graph::AddEdges(map<string, HT> &table)
+void Graph::AddEdges(map<string, unordered_set<string>>& stlTable)
+{
+    for (auto it = stlTable.begin(); it != stlTable.end(); it++)
+    {
+        string currCountry = it->first;
+        unordered_set<string>& currTable = it->second;
+
+        for (auto nextIt = stlTable.begin(); nextIt != stlTable.end(); nextIt++)
+        {
+            //iterate thru rest of table for comparisons to make edges
+            if (nextIt->first == currCountry)
+                continue; //don't compare it to self
+            else
+            {
+                string currComp = nextIt->first;
+                if (!IsEdge(currCountry, currComp)) //if edge doesn't already exist
+                {
+                    unordered_set<string> currCompTable = nextIt->second;
+                    int rank = 0;
+                    if (currTable.size() > currCompTable.size())//returns true if currTable is smaller or equal to currComp
+                    {
+                        rank = GetEdgeRank(currTable, currCompTable); //call this on smaller table to make faster
+                    } else {
+                        rank = GetEdgeRank(currCompTable, currTable);
+                    }
+
+                    if (rank != 0) //add edge to both vertices since undirected
+                    {
+                        graph[currCountry].push_back({currComp, rank});
+                        graph[currComp].push_back({currCountry, rank});
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+void Graph::AddEdges(map<string, HT>& table)
 {
     for (auto it = table.begin(); it != table.end(); it++)
     {
@@ -69,6 +119,22 @@ int Graph::GetEdgeRank(HT &currTable, HT &compTable)
                     rank++;
             }
         }
+    }
+    return rank;
+}
+
+int Graph::GetEdgeRank(unordered_set<string>& currTable, unordered_set<string>& compTable)
+{
+    int rank = 0;
+    for (auto it = currTable.begin(); it != currTable.end(); it++)
+    {
+        string currSong = *it;
+        if (compTable.count(currSong) != 0)
+        {
+            //song exists in compTable
+            rank++;
+        }
+
     }
     return rank;
 }
