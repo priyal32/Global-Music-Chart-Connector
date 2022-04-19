@@ -12,6 +12,7 @@ void PrintMenu()
     cout << "3. Enter 1 country, see all related countries" << endl;
     cout << "4. Enter 2 countries, see if related" << endl;
 }
+
 void readFileHT(ifstream &file, map<string, HT>& table, map<string, unordered_set<string>>& stlTable, bool useHT)
 {
     string line;
@@ -26,17 +27,14 @@ void readFileHT(ifstream &file, map<string, HT>& table, map<string, unordered_se
 
     while (getline(file, line))
     {
-
         // Parsing
         istringstream in(line);
-
         in >> a;
         if (a != '\"')
         {
             getline(in, _title, ',');
             string s(1, a);
             _title = s + _title;
-
         }
         else
         {
@@ -62,17 +60,13 @@ void readFileHT(ifstream &file, map<string, HT>& table, map<string, unordered_se
 
         getline(in, _region, ',');
         if(_region == "Global")
-        {
             continue;
-        }
         titleArtist = _title  + " " + _artist;
 
         if (useHT)
         {
-            if (table.find(_region) != table.end()) //region already exists in table
-            {
+            if (table.find(_region) != table.end()) //region already exists in tabl
                 table[_region].Insert(titleArtist);
-            }
             else
             {
                 HT newHT;
@@ -83,9 +77,7 @@ void readFileHT(ifstream &file, map<string, HT>& table, map<string, unordered_se
         else //use unordered set
         {
             if (stlTable.find(_region) != stlTable.end())
-            {
                 stlTable[_region].insert(titleArtist); //insert to stl unordered set
-            }
             else
             {
                 unordered_set<string> uoSet;
@@ -94,14 +86,12 @@ void readFileHT(ifstream &file, map<string, HT>& table, map<string, unordered_se
             }
         }
     }
-
     file.close();
 }
 
 void WorkWithUser(Graph& graph)
 {
     cout << "Welcome to Global Chart Connections!" << endl;
-    //main menu
     string option;
     while (option != "0")
     {
@@ -143,21 +133,18 @@ void WorkWithUser(Graph& graph)
             graph.CheckIfRelated(country1, country2);
         }
         else
-        {
             cout << "Invalid input! Please enter an integer from 0 to 4." << endl;
-        }
         cout << endl;
     }
 }
 
 int main()
 {
-    cout << "Loading data..." << endl << endl;
     ifstream file("Charts");
-
     cout << "Enter 1 to use our hash table, or 2 to use STL unordered set:";
     int choice;
     cin >> choice;
+    cout << "Loading data..." << endl << endl;
     map<string, HT> table;
     map<string, unordered_set<string>> stlTable;
     if (choice == 1)
@@ -167,29 +154,27 @@ int main()
         auto start = chrono::high_resolution_clock::now();
         readFileHT(file, table, stlTable, true);
         Graph graph(table);
-        //
+
         auto stop = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::milliseconds>(stop-start);
-        cout << "Time taken to insert data into HashTable:" << duration.count() << " milliseconds" << endl << endl;
-        //
+        cout << "Time taken to insert data into HashTables and create Graph:" << duration.count() << " milliseconds" << endl << endl;
+
         WorkWithUser(graph);
     }
     else if (choice == 2)
     {
-        //
         auto start = chrono::high_resolution_clock::now();
         readFileHT(file, table, stlTable, false);
         Graph graph(stlTable);
-        //
+
         auto stop = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::milliseconds>(stop-start);
         cout << "Time taken to insert data into HashTable:" << duration.count() << " milliseconds" << endl << endl;
-        //
+
         WorkWithUser(graph);
     }
     else
-    {
         cout << "Invalid selection. Please try again and select enter either 1 or 2. Goodbye!" << endl;
-    }
+
 
 }

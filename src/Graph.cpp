@@ -2,7 +2,7 @@
 
 Graph::Graph(map<string, unordered_set<string>>& stlTable)
 {
-    //add all countries to graph so we don't have to check it later
+    //add all countries to graph so we don't have to check it later, use unordered set
     for (auto it = stlTable.begin(); it != stlTable.end(); it++)
     {
         vector<pair<string, int>> vec;
@@ -14,7 +14,7 @@ Graph::Graph(map<string, unordered_set<string>>& stlTable)
 
 Graph::Graph(map<string, HT>& table)
 {
-    //add all countries to graph so we don't have to check it later
+    //add all countries to graph so we don't have to check it later, use our HT
     for (auto it = table.begin(); it != table.end(); it++)
     {
         vector<pair<string, int>> vec;
@@ -44,11 +44,9 @@ void Graph::AddEdges(map<string, unordered_set<string>>& stlTable)
                     unordered_set<string> currCompTable = nextIt->second;
                     int rank = 0;
                     if (currTable.size() > currCompTable.size())//returns true if currTable is smaller or equal to currComp
-                    {
                         rank = GetEdgeRank(currTable, currCompTable); //call this on smaller table to make faster
-                    } else {
+                    else
                         rank = GetEdgeRank(currCompTable, currTable);
-                    }
 
                     if (rank != 0) //add edge to both vertices since undirected
                     {
@@ -57,7 +55,6 @@ void Graph::AddEdges(map<string, unordered_set<string>>& stlTable)
                     }
                 }
             }
-
         }
     }
 }
@@ -82,11 +79,9 @@ void Graph::AddEdges(map<string, HT>& table)
                     HT &currCompHT = nextIt->second;
                     int rank = 0;
                     if (CompareHTSize(currTable, currCompHT))//returns true if currTable is smaller or equal to currComp
-                    {
                         rank = GetEdgeRank(currTable, currCompHT); //call this on smaller table to make faster
-                    } else {
+                    else
                         rank = GetEdgeRank(currCompHT, currTable);
-                    }
 
                     if (rank != 0) //add edge to both vertices since undirected
                     {
@@ -95,7 +90,6 @@ void Graph::AddEdges(map<string, HT>& table)
                     }
                 }
             }
-
         }
     }
 }
@@ -107,9 +101,7 @@ int Graph::GetEdgeRank(HT &currTable, HT &compTable)
     for (int i = 0; i < currTable.GetCap(); i++)
     {
         if (currSet[i].empty())
-        {
             continue;
-        }
         else
         {
             for (auto songIt = currSet[i].begin(); songIt != currSet[i].end(); songIt++)
@@ -129,12 +121,8 @@ int Graph::GetEdgeRank(unordered_set<string>& currTable, unordered_set<string>& 
     for (auto it = currTable.begin(); it != currTable.end(); it++)
     {
         string currSong = *it;
-        if (compTable.count(currSong) != 0)
-        {
-            //song exists in compTable
+        if (compTable.count(currSong) != 0) //song exists in compTable
             rank++;
-        }
-
     }
     return rank;
 }
@@ -160,17 +148,13 @@ bool Graph::CompareHTSize(HT& a, HT& b) //true if a < b
 void Graph::PrintCountries()
 {
     for (auto it = graph.begin(); it != graph.end(); it++)
-    {
         cout << it->first << endl;
-    }
 }
 
 bool Graph::FindCountry(string country)
 {
     if (graph.find(country) == graph.end())
-    {
         return false;
-    }
     return true;
 }
 
@@ -200,7 +184,7 @@ void Graph::PrintConnections(string country, bool top5)
     }
     else
     {
-        cout << "Invalid input :( Please check input and ensure correct spelling." << endl;
+        cout << "Invalid input :( Please check input and ensure correct spelling and capitalization." << endl;
         cout << "Use option 4 to check if country exists in dataset." << endl;
     }
 }
@@ -219,16 +203,12 @@ void Graph::CheckIfRelated(string country1, string country2)
                 break;
             }
         }
-
         if (!connected)
-        {
             cout << country1 << " and " << country2 << " do not share any songs :(" << endl;
-        }
-
     }
     else
     {
-        cout << "Invalid input :( Please check input and ensure correct spelling." << endl;
+        cout << "Invalid input :( Please check input and ensure correct spelling and capitalization." << endl;
         cout << "Use option 4 to check if BOTH countries exists in dataset." << endl;
     }
 }

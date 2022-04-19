@@ -12,7 +12,6 @@ class Graph
 {
 private:
     map<string, vector<pair<string, int>>> graph;
-    // country              country, rank
     void AddEdges(map<string, HT>& table);
     void AddEdges(map<string, unordered_set<string>>& stlTable);
     bool IsEdge(string country1, string country2);

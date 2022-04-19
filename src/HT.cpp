@@ -18,9 +18,7 @@ void HT::Insert(string val)
         arr[index] = newSet;
     }
     else
-    {
         arr[index].insert(val);
-    }
     size++;
     CheckResize();
 }
@@ -39,9 +37,7 @@ void HT::CheckResize()
         {
             set<string>& currSet = temp[i];
             for (auto it = currSet.begin(); it != currSet.end(); it++)
-            {
                 Insert(*it);
-            }
         }
         delete[] temp;
     }
@@ -54,11 +50,8 @@ bool HT::Has(string val)
         return false;
     else
     {
-        if (arr[key].count(val) == 1)
-        {
-            //set containts val
+        if (arr[key].count(val) == 1) //set contains val
             return true;
-        }
     }
     return false;
 }
